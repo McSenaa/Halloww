@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday 🎉</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div id="lockScreen">
+    <center>
+      <div class="lockscreen-area">
+        <h2 class="h2-tittle">Masukkan Password 🔐</h2>
+        <input type="password" id="password" placeholder="Apa hayoo..." class="placeholder-area"/>
+        <button class="btn" onclick="checkPassword()">Masuk</button>
+        <br>
+        <p id="countdown" class="cd"></p>
+      </div>
+    </center>
+  </div>
+
+  <section>
+    <h1>🎂 Happy Birthday 🎉</h1>
+    <h2 id="typing"></h2>
+    <button class="btn" onclick="showMessage()">Buka Surprise</button>
+  </section>
+
+  <section id="message" style="display: none">
+    <div class="card">
+      <h2>💌 Untukmu...</h2>
+      <p>
+        Selamat ulang tahun ya! 🎉 Hari ini adalah hari spesial dimana dunia
+        menjadi lebih indah karena kehadiranmu. Semoga semua impianmu tercapai
+        dan kamu selalu bahagia 💖
+      </p>
+    </div>
+    <button class="btn" onclick="playMusic()">Putar Musik 🎵</button>
+  </section>
+
+  <section>
+    <h2>📸 Kenangan</h2>
+    <div class="slideshow">
+      <div class="slide"><img src="https://picsum.photos/400/300?1" /></div>
+      <div class="slide"><img src="https://picsum.photos/400/300?2" /></div>
+      <div class="slide"><img src="https://picsum.photos/400/300?3" /></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>🎂 Tiup Lilin</h2>
+    <div class="cake" onclick="blowCandle()">🕯️🎂</div>
+    <p id="cakeMsg"></p>
+  </section>
+
+  <script>
+    document.body.classList.add("locked");
+
+    // PASSWORD
+    function checkPassword() {
+        let pass = document.getElementById("password").value;
+        if (pass === "123") {
+          document.getElementById("lockScreen").style.display = "none";
+
+          // buka scroll
+          document.body.classList.remove("locked");
+        } else alert("Password salah 😢");
+      }
+
+    // COUNTDOWN
+      let target = new Date("2026-05-05 00:00:00");
+
+      setInterval(() => {
+        let now = new Date(); 
+        let diff = target - now;
+
+        if (diff <= 0) {
+          document.getElementById("countdown").innerText = "🎉 Hari ini harinya!";
+          return;
+        }
+
+        let h = Math.floor(diff / 1000 / 60 / 60);
+        let m = Math.floor(diff / 1000 / 60) % 60;
+        let s = Math.floor(diff / 1000) % 60;
+
+        let cd = document.getElementById("countdown");
+
+        cd.innerText = `🎉 ${h}j ${m}m ${s}d`;
+
+        // trigger animasi
+        cd.classList.remove("animate-countdown");
+        void cd.offsetWidth;
+        cd.classList.add("animate-countdown");
+
+      }, 1000);
+
+    // TYPING
+    let text = "Ni Made Meisa Sinta Dewi 💖";
+    let idx = 0;
+    function typing() {
+      if (idx < text.length) {
+        document.getElementById("typing").innerHTML += text[idx];
+        idx++;
+        setTimeout(typing, 80);
+      }
+    }
+    typing();
+
+    // MESSAGE + SNOW
+    function showMessage() {
+      document.getElementById("message").style.display = "flex";
+      startSnow();
+    }
+
+    // SNOW EFFECT (SAFE)
+    function startSnow() {
+      for (let i = 0; i < 40; i++) {
+        let snow = document.createElement("div");
+        snow.className = "snow";
+        snow.innerHTML = "❄";
+        snow.style.left = Math.random() * 100 + "vw";
+        snow.style.animationDuration = 3 + Math.random() * 5 + "s";
+        snow.style.opacity = Math.random();
+        document.body.appendChild(snow);
+        setTimeout(() => snow.remove(), 8000);
+      }
+    }
+
+    // MUSIC
+    let audio = new Audio(
+      "https://www.bensound.com/bensound-music/bensound-happyrock.mp3",
+    );
+    function playMusic() {
+      audio.play().catch(() => alert("Klik lagi ya 😄"));
+    }
+
+    // SLIDESHOW
+    let i = 0;
+    function showSlides() {
+      let slides = document.getElementsByClassName("slide");
+      for (let j = 0; j < slides.length; j++)
+        slides[j].classList.remove("active");
+      i++;
+      if (i > slides.length) i = 1;
+      slides[i - 1].classList.add("active");
+      setTimeout(showSlides, 3000);
+    }
+    showSlides();
+
+    // CAKE
+    function blowCandle() {
+      document.querySelector(".cake").innerHTML = "🎂";
+      document.getElementById("cakeMsg").innerText = "Wish kamu terkabul ✨";
+    }
+
+    // HEART CLICK
+    document.addEventListener("click", function (e) {
+      let heart = document.createElement("div");
+      heart.className = "heart";
+      heart.innerHTML = "❤";
+      heart.style.left = e.clientX + "px";
+      heart.style.top = e.clientY + "px";
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
+    });
+
+    // SCROLL ANIMATION
+    const sections = document.querySelectorAll("section");
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) e.target.classList.add("show");
+      });
+    });
+    sections.forEach((s) => obs.observe(s));
+  </script>
+</body>
+
+</html>
